@@ -187,6 +187,7 @@
                                     <outlet property="imgPhoto" destination="pGO-rz-l1h" id="3qq-3o-yxD"/>
                                     <outlet property="lblDesc" destination="h3y-md-UWW" id="Ese-Ad-4fe"/>
                                     <outlet property="lbltitle" destination="cVt-zd-zBN" id="ej1-Rm-Amo"/>
+                                    <segue destination="FSK-09-Bq9" kind="show" identifier="edit" id="Xnb-Pt-CBj"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -233,6 +234,9 @@
             <point key="canvasLocation" x="16.030534351145036" y="-54.225352112676056"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Xnb-Pt-CBj"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="PlaceHolder" width="300" height="300"/>
         <systemColor name="separatorColor">

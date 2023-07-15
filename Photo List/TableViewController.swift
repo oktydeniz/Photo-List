@@ -58,6 +58,34 @@ class TableViewController: UITableViewController {
         cell.lbltitle.text = dataRow.title
         return cell
     }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.reloadData()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "edit") {
+            let selected = sender as! UITableViewCell
+            let index = tableView.indexPath(for: selected)
+            
+            let addPhotoVC : AddPhotoViewController = segue.destination as! AddPhotoViewController
+            let selectedModel: Entity = frc.object(at: index!) as! Entity
+            addPhotoVC.selectedModel = selectedModel
+            
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle:UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath){
+        
+        let managedObj: NSManagedObject = frc.object(at: indexPath) as! NSManagedObject
+        pc.delete(managedObj)
+        do {
+            try pc.save()
+        } catch {
+            print(error)
+            return
+        }
+    }
 }
 
 

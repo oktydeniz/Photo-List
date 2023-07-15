@@ -6,16 +6,27 @@
 //
 
 import UIKit
-
+import CoreData
 class AddPhotoViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var descView: UITextField!
     @IBOutlet weak var titleView: UITextField!
+    
+    var ps = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
+    var selectedModel: Entity? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        self.navigationItem.title = "Add New Row"
+        if selectedModel != nil {
+            descView.text = selectedModel?.desc
+            titleView.text = selectedModel?.title
+            imageView.image = UIImage(data: (selectedModel?.img)!)
+            self.navigationItem.title = selectedModel?.title
+        }
     }
     
     @IBAction func openCameraAction(_ sender: Any) {
@@ -42,7 +53,28 @@ class AddPhotoViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     @IBAction func saveAction(_ sender: Any) {
+        if selectedModel != nil {
+            
+            selectedModel?.title = titleView.text
+            selectedModel?.desc = descView.text
+            selectedModel?.img = imageView.image?.jpegData(compressionQuality: 0.8) as Data?
+        } else {
+            let entityDesc = NSEntityDescription.entity(forEntityName: "Entity", in: ps)
+            let data = Entity(entity: entityDesc!, insertInto: ps)
+            data.title = titleView.text
+            data.desc = descView.text
+            data.img = imageView.image?.jpegData(compressionQuality: 0.8) as Data?
+        }
         
+        do {
+            if(ps.hasChanges) {
+                try ps.save()
+            }
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+        navigationController?.popViewController(animated: true)
     }
 
     @IBAction func dismissKeyboard(_ sender: UITextField) {
